@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Daftar Kelas - Pelatihan</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;700&display=swap" rel="stylesheet">
+  <script defer src="sheets.js"></script>
+  <script defer>
+    async function init() {
+      const listEl = document.getElementById('kelas-list');
+      const jenjangEl = document.getElementById('filter-jenjang');
+      const tahapEl = document.getElementById('filter-tahap');
+      const lokusEl = document.getElementById('filter-lokus');
+      const kecEl = document.getElementById('filter-kecamatan');
+
+      const classes = await window.SheetsAPI.getClasses();
+      if (!classes.length) {
+        listEl.innerHTML = '<p class="muted">Tidak ada data kelas. Pastikan tab nama sheet benar di sheets.js.</p>';
+        return;
+      }
+
+      // Populate filters
+      for (const j of window.SheetsAPI.uniqueValues(classes, 'jenjang')) addOption(jenjangEl, j);
+      for (const t of window.SheetsAPI.uniqueValues(classes, 'tahap')) addOption(tahapEl, t);
+      for (const l of window.SheetsAPI.uniqueValues(classes, 'lokus')) addOption(lokusEl, l);
+      for (const k of window.SheetsAPI.uniqueValues(classes, 'kecamatan')) addOption(kecEl, k);
+
+      function addOption(select, value) {
+        const opt = document.createElement('option');
+        opt.value = value; opt.textContent = value; select.appendChild(opt);
+      }
+
+      function applyFilter() {
+        const f = {
+          jenjang: jenjangEl.value,
+          tahap: tahapEl.value,
+          lokus: lokusEl.value,
+          kecamatan: kecEl.value,
+          q: document.getElementById('filter-q').value.toLowerCase()
+        };
+        render(classes.filter(c =>
+          (!f.jenjang || c.jenjang === f.jenjang) &&
+          (!f.tahap || c.tahap === f.tahap) &&
+          (!f.lokus || c.lokus === f.lokus) &&
+          (!f.kecamatan || c.kecamatan === f.kecamatan) &&
+          (!f.q || c.namaKelas.toLowerCase().includes(f.q) || c.lokus.toLowerCase().includes(f.q))
+        ));
+      }
+
+      jenjangEl.addEventListener('change', applyFilter);
+      tahapEl.addEventListener('change', applyFilter);
+      lokusEl.addEventListener('change', applyFilter);
+      kecEl.addEventListener('change', applyFilter);
+      document.getElementById('filter-q').addEventListener('input', applyFilter);
+
+      render(classes);
+
+      function render(items) {
+        listEl.innerHTML = '';
+        if (!items.length) {
+          listEl.innerHTML = '<p class="muted">Tidak ada kelas yang cocok.</p>';
+          return;
+        }
+        for (const c of items) {
+          const card = document.createElement('div');
+          card.className = 'card';
+          card.innerHTML = `
+            <div class="card-header">
+              <h3>${c.namaKelas}</h3>
+              <div class="badge">${c.jenjang}</div>
+            </div>
+            <div class="card-body">
+              <p><strong>Lokus:</strong> ${c.lokus} — ${c.kecamatan}</p>
+              <p><strong>Tahap:</strong> ${c.tahap} | <strong>No. Kelas:</strong> ${c.noKelas || '-'}</p>
+              <p><strong>Jumlah Peserta:</strong> ${c.jumlahPeserta || '-'}</p>
+            </div>
+            <div class="card-actions">
+              <a class="btn" href="peserta-tidak-hadir.html">Catat Tidak Hadir</a>
+            </div>`;
+          listEl.appendChild(card);
+        }
+      }
+    }
+    document.addEventListener('DOMContentLoaded', init);
+  </script>
+</head>
+<body>
+  <div class="main-container">
+    <a href="home.html" class="back-link">← Kembali ke Halaman Utama</a>
+    <header class="header-section">
+      <h1>Daftar Kelas</h1>
+      <p>Filter berdasar jenjang, tahap, lokus, dan kecamatan. Data bersumber dari spreadsheet.</p>
+    </header>
+
+    <div class="form-container">
+      <div class="form-row">
+        <div class="form-group">
+          <label for="filter-jenjang">Jenjang</label>
+          <select id="filter-jenjang"><option value="">Semua</option></select>
+        </div>
+        <div class="form-group">
+          <label for="filter-tahap">Tahap</label>
+          <select id="filter-tahap"><option value="">Semua</option></select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="filter-lokus">Lokus</label>
+          <select id="filter-lokus"><option value="">Semua</option></select>
+        </div>
+        <div class="form-group">
+          <label for="filter-kecamatan">Kecamatan</label>
+          <select id="filter-kecamatan"><option value="">Semua</option></select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="filter-q">Pencarian Cepat</label>
+        <input type="text" id="filter-q" placeholder="Cari nama kelas/lokus...">
+      </div>
+    </div>
+
+    <section id="kelas-list" class="gallery-grid"></section>
+  </div>
+</body>
+</html>
+

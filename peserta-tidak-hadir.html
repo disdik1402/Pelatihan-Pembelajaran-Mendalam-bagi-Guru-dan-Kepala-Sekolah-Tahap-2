@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Input Peserta Tidak Hadir - Pelatihan</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;700&display=swap" rel="stylesheet">
+  <script defer src="submit.js"></script>
+</head>
+<body>
+  <div class="main-container">
+    <a href="home.html" class="back-link">← Kembali ke Halaman Utama</a>
+    <div class="form-container">
+      <header class="header-section">
+        <h1>Form Peserta Tidak Hadir</h1>
+        <p>Form ini diisi oleh fasilitator/petugas untuk mencatat ketidakhadiran peserta per sesi.</p>
+      </header>
+
+      <form action="#" method="POST">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="tanggal">Tanggal</label>
+            <input type="date" id="tanggal" name="tanggal" required>
+          </div>
+          <div class="form-group">
+            <label for="sesi">Sesi</label>
+            <select id="sesi" name="sesi" required>
+              <option value="">-- Pilih Sesi --</option>
+              <option>Pembukaan</option>
+              <option>Sesi 1</option>
+              <option>Sesi 2</option>
+              <option>Sesi 3</option>
+              <option>Penutupan</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="jenjang">Jenjang</label>
+            <select id="jenjang" name="jenjang" required>
+              <option value="">-- Pilih Jenjang --</option>
+              <option>KS</option>
+              <option>PAUD</option>
+              <option>SD</option>
+              <option>SMP</option>
+              <option>SMA</option>
+              <option>Paud-PNF</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="tahap">Tahap</label>
+            <select id="tahap" name="tahap" required>
+              <option value="">-- Pilih Tahap --</option>
+              <option>TAHAP 1</option>
+              <option>TAHAP 2</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="kabupaten">Kab./Kota</label>
+            <input type="text" id="kabupaten" name="kabupaten" placeholder="Kab. Pasuruan" required>
+          </div>
+          <div class="form-group">
+            <label for="kecamatan">Kecamatan</label>
+            <input type="text" id="kecamatan" name="kecamatan" placeholder="Pandaan/Bangil/..." required>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="lokus">Lokus/Sekolah</label>
+          <input type="text" id="lokus" name="lokus" placeholder="SMPN 1 Pandaan / SMPN 2 Pandaan / ..." required>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="kelas">Nama Kelas</label>
+            <input type="text" id="kelas" name="kelas" placeholder="mis. KS_Kab. Pasuruan_5" required>
+          </div>
+          <div class="form-group">
+            <label for="no_kelas">No. Kelas</label>
+            <input type="number" id="no_kelas" name="no_kelas" min="1" placeholder="mis. 5" required>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="nama_peserta">Nama Peserta yang Tidak Hadir</label>
+          <input type="text" id="nama_peserta" name="nama_peserta" required>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="status">Status</label>
+            <select id="status" name="status" required>
+              <option value="">-- Pilih Status --</option>
+              <option value="izin">Izin</option>
+              <option value="sakit">Sakit</option>
+              <option value="alpa">Alpa</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="alasan">Alasan (opsional)</label>
+            <input type="text" id="alasan" name="alasan" placeholder="Ringkas">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="catatan">Catatan</label>
+          <textarea id="catatan" name="catatan" rows="3" placeholder="Catatan tambahan"></textarea>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="nama_petugas">Nama Fasilitator/Petugas</label>
+            <input type="text" id="nama_petugas" name="nama_petugas" required>
+          </div>
+          <div class="form-group">
+            <label for="kontak_petugas">Kontak Petugas</label>
+            <input type="tel" id="kontak_petugas" name="kontak_petugas" placeholder="0812..." required>
+          </div>
+        </div>
+
+        <button type="submit" class="btn">Simpan Ketidakhadiran</button>
+      </form>
+    </div>
+  </div>
+</body>
+</html>
+
