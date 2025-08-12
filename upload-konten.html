@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Konten Kelas - Pelatihan Pembelajaran Mendalam</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;700&display=swap" rel="stylesheet">
+    <script defer src="config.js"></script>
+    <script defer src="submit.js"></script>
+</head>
+<body>
+
+    <div class="main-container">
+        <!-- Tombol Kembali -->
+        <a href="galeri-kelas.html" class="back-link">← Kembali ke Galeri Kelas</a>
+        
+        <header class="header-section">
+            <h1>📤 Upload Konten Kelas</h1>
+            <p id="kelas-info">Silakan lengkapi form di bawah ini untuk mengunggah konten kelas</p>
+        </header>
+
+        <!-- Form Upload Konten -->
+        <div class="form-container">
+            <form action="/submit-konten" method="POST" enctype="multipart/form-data">
+                <!-- Informasi Kelas -->
+                <div class="form-group">
+                    <label for="nama_kelas">Nama Kelas *</label>
+                    <input type="text" id="nama_kelas" name="nama_kelas" readonly>
+                </div>
+
+                <!-- Tipe Konten -->
+                <div class="form-group">
+                    <label for="tipe_konten">Tipe Konten *</label>
+                    <select id="tipe_konten" name="tipe_konten" required>
+                        <option value="">-- Pilih Tipe Konten --</option>
+                        <option value="foto_kegiatan">Foto Kegiatan</option>
+                        <option value="video_kegiatan">Video Kegiatan</option>
+                        <option value="dokumen_materi">Dokumen Materi</option>
+                        <option value="presentasi">Presentasi</option>
+                        <option value="laporan_kegiatan">Laporan Kegiatan</option>
+                        <option value="lainnya">Lainnya</option>
+                    </select>
+                </div>
+
+                <!-- Judul Konten -->
+                <div class="form-group">
+                    <label for="judul_konten">Judul Konten *</label>
+                    <input type="text" id="judul_konten" name="judul_konten" placeholder="Contoh: Foto Kegiatan Praktikum IPA" required>
+                </div>
+
+                <!-- Deskripsi -->
+                <div class="form-group">
+                    <label for="deskripsi">Deskripsi Konten</label>
+                    <textarea id="deskripsi" name="deskripsi" rows="4" placeholder="Jelaskan detail konten yang diunggah..."></textarea>
+                </div>
+
+                <!-- File Upload -->
+                <div class="form-group">
+                    <label for="file_konten">File Konten *</label>
+                    <input type="file" id="file_konten" name="file_konten" accept="image/*,video/*,.pdf,.doc,.docx,.ppt,.pptx" required>
+                    <small class="file-info">
+                        Format yang didukung: JPG, PNG, GIF, MP4, AVI, PDF, DOC, DOCX, PPT, PPTX<br>
+                        Maksimal ukuran: 10 MB
+                    </small>
+                </div>
+
+                <!-- Tanggal Kegiatan -->
+                <div class="form-group">
+                    <label for="tanggal_kegiatan">Tanggal Kegiatan *</label>
+                    <input type="date" id="tanggal_kegiatan" name="tanggal_kegiatan" required>
+                </div>
+
+                <!-- Kategori Materi -->
+                <div class="form-group">
+                    <label for="kategori_materi">Kategori Materi</label>
+                    <select id="kategori_materi" name="kategori_materi">
+                        <option value="">-- Pilih Kategori --</option>
+                        <option value="pembukaan">Pembukaan & Ice Breaking</option>
+                        <option value="teori">Teori & Konsep</option>
+                        <option value="praktikum">Praktikum & Hands-on</option>
+                        <option value="diskusi">Diskusi & Tanya Jawab</option>
+                        <option value="evaluasi">Evaluasi & Refleksi</option>
+                        <option value="penutupan">Penutupan & Penugasan</option>
+                        <option value="lainnya">Lainnya</option>
+                    </select>
+                </div>
+
+                <!-- Tags -->
+                <div class="form-group">
+                    <label for="tags">Tags (pisahkan dengan koma)</label>
+                    <input type="text" id="tags" name="tags" placeholder="Contoh: praktikum, IPA, hands-on, kelompok">
+                </div>
+
+                <!-- Informasi Fasilitator -->
+                <div class="form-group">
+                    <label for="nama_fasilitator">Nama Fasilitator *</label>
+                    <input type="text" id="nama_fasilitator" name="nama_fasilitator" placeholder="Nama lengkap fasilitator" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="email_fasilitator">Email Fasilitator *</label>
+                    <input type="email" id="nama_fasilitator" name="email_fasilitator" placeholder="email@example.com" required>
+                </div>
+
+                <!-- Tombol Submit -->
+                <button type="submit" class="btn">📤 Upload Konten</button>
+            </form>
+        </div>
+
+        <!-- Preview File -->
+        <div class="preview-section" id="preview-section" style="display: none;">
+            <h3>Preview File</h3>
+            <div id="file-preview"></div>
+        </div>
+    </div>
+
+    <script>
+        // Ambil parameter kelas dari URL
+        function getKelasFromUrl() {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get('kelas');
+        }
+
+        // Set informasi kelas
+        function setKelasInfo() {
+            const namaKelas = getKelasFromUrl();
+            if (namaKelas) {
+                document.getElementById('nama_kelas').value = namaKelas;
+                document.getElementById('kelas-info').textContent = `Upload konten untuk kelas: ${namaKelas}`;
+            }
+        }
+
+        // Preview file yang dipilih
+        function previewFile(input) {
+            const file = input.files[0];
+            const previewSection = document.getElementById('preview-section');
+            const filePreview = document.getElementById('file-preview');
+            
+            if (!file) {
+                previewSection.style.display = 'none';
+                return;
+            }
+
+            previewSection.style.display = 'block';
+            
+            if (file.type.startsWith('image/')) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    filePreview.innerHTML = `
+                        <img src="${e.target.result}" alt="Preview" style="max-width: 300px; max-height: 200px;">
+                        <p><strong>Nama File:</strong> ${file.name}</p>
+                        <p><strong>Ukuran:</strong> ${(file.size / 1024 / 1024).toFixed(2)} MB</p>
+                        <p><strong>Tipe:</strong> ${file.type}</p>
+                    `;
+                };
+                reader.readAsDataURL(file);
+            } else if (file.type.startsWith('video/')) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    filePreview.innerHTML = `
+                        <video controls style="max-width: 300px; max-height: 200px;">
+                            <source src="${e.target.result}" type="${file.type}">
+                            Browser Anda tidak mendukung tag video.
+                        </video>
+                        <p><strong>Nama File:</strong> ${file.name}</p>
+                        <p><strong>Ukuran:</strong> ${(file.size / 1024 / 1024).toFixed(2)} MB</p>
+                        <p><strong>Tipe:</strong> ${file.type}</p>
+                    `;
+                };
+                reader.readAsDataURL(file);
+            } else {
+                filePreview.innerHTML = `
+                    <div class="file-icon">📄</div>
+                    <p><strong>Nama File:</strong> ${file.name}</p>
+                    <p><strong>Ukuran:</strong> ${(file.size / 1024 / 1024).toFixed(2)} MB</p>
+                    <p><strong>Tipe:</strong> ${file.type}</p>
+                `;
+            }
+        }
+
+        // Validasi ukuran file
+        function validateFileSize(input) {
+            const file = input.files[0];
+            const maxSize = 10 * 1024 * 1024; // 10 MB
+            
+            if (file && file.size > maxSize) {
+                alert('Ukuran file terlalu besar! Maksimal 10 MB.');
+                input.value = '';
+                document.getElementById('preview-section').style.display = 'none';
+                return false;
+            }
+            return true;
+        }
+
+        // Event listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            setKelasInfo();
+            
+            // Set tanggal hari ini sebagai default
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('tanggal_kegiatan').value = today;
+            
+            // File preview
+            document.getElementById('file_konten').addEventListener('change', function(e) {
+                if (validateFileSize(this)) {
+                    previewFile(this);
+                }
+            });
+        });
+
+        // Form validation
+        document.querySelector('form').addEventListener('submit', function(e) {
+            const namaKelas = document.getElementById('nama_kelas').value;
+            const fileKonten = document.getElementById('file_konten').files[0];
+            
+            if (!namaKelas) {
+                e.preventDefault();
+                alert('Nama kelas tidak ditemukan. Silakan kembali ke halaman galeri.');
+                return;
+            }
+            
+            if (!fileKonten) {
+                e.preventDefault();
+                alert('Silakan pilih file konten yang akan diunggah.');
+                return;
+            }
+            
+            // Validasi ukuran file
+            if (!validateFileSize(document.getElementById('file_konten'))) {
+                e.preventDefault();
+                return;
+            }
+        });
+    </script>
+
+</body>
+</html>

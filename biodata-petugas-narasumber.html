@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulir Biodata Petugas & Narasumber - Pelatihan Pembelajaran Mendalam</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;700&display=swap" rel="stylesheet">
+    <script defer src="config.js"></script>
+    <script defer src="submit.js"></script>
+</head>
+<body>
+
+    <div class="main-container">
+        <!-- Tombol Kembali ke Halaman Utama -->
+        <a href="index.html" class="back-link">← Kembali ke Halaman Utama</a>
+        
+        <!-- Kontainer Formulir dengan Efek Kaca -->
+        <div class="form-container">
+            <header class="header-section">
+                <h1>Formulir Biodata Petugas & Narasumber</h1>
+                <p>Silakan lengkapi data di bawah ini dengan benar. Semua field bertanda (*) wajib diisi.</p>
+            </header>
+
+            <form action="/submit-biodata" method="POST">
+                <!-- Tipe Pengguna -->
+                <div class="form-group">
+                    <label for="tipe_pengguna">Tipe Pengguna *</label>
+                    <select id="tipe_pengguna" name="tipe_pengguna" required onchange="toggleFields()">
+                        <option value="">-- Pilih Tipe Pengguna --</option>
+                        <option value="petugas">Petugas/Panitia</option>
+                        <option value="narasumber">Narasumber Pembuka Acara</option>
+                    </select>
+                </div>
+
+                <!-- Data Pribadi -->
+                <div class="form-group">
+                    <label for="nama">Nama Lengkap (dengan titel) *</label>
+                    <input type="text" id="nama" name="nama" placeholder="Contoh: Dr. Ahmad Susanto, M.Pd." required>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="tempat_lahir">Tempat Lahir *</label>
+                        <input type="text" id="tempat_lahir" name="tempat_lahir" placeholder="Contoh: Surabaya" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="tanggal_lahir">Tanggal Lahir *</label>
+                        <input type="date" id="tanggal_lahir" name="tanggal_lahir" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="nip">NIP (Nomor Induk Pegawai)</label>
+                        <input type="text" id="nip" name="nip" placeholder="Contoh: 198501012010011001">
+                    </div>
+                    <div class="form-group">
+                        <label for="npwp">NPWP (Nomor Pokok Wajib Pajak)</label>
+                        <input type="text" id="npwp" name="npwp" placeholder="Contoh: 12.345.678.9-123.000">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="pangkat">Pangkat, Golongan</label>
+                        <input type="text" id="pangkat" name="pangkat" placeholder="Contoh: Penata Tk.I, III/d">
+                    </div>
+                    <div class="form-group">
+                        <label for="jabatan">Jabatan *</label>
+                        <input type="text" id="jabatan" name="jabatan" placeholder="Contoh: Kepala Sekolah, Guru, dll" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="agama">Agama *</label>
+                        <select id="agama" name="agama" required>
+                            <option value="">-- Pilih Agama --</option>
+                            <option value="Islam">Islam</option>
+                            <option value="Kristen Protestan">Kristen Protestan</option>
+                            <option value="Katolik">Katolik</option>
+                            <option value="Hindu">Hindu</option>
+                            <option value="Buddha">Buddha</option>
+                            <option value="Khonghucu">Khonghucu</option>
+                            <option value="Lainnya">Lainnya</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="jenis_kelamin">Jenis Kelamin *</label>
+                        <select id="jenis_kelamin" name="jenis_kelamin" required>
+                            <option value="">-- Pilih Jenis Kelamin --</option>
+                            <option value="Laki-laki">Laki-laki</option>
+                            <option value="Perempuan">Perempuan</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Data Unit Kerja -->
+                <div class="form-group">
+                    <label for="unit_kerja">Alamat Unit Kerja *</label>
+                    <textarea id="unit_kerja" name="unit_kerja" rows="3" placeholder="Alamat lengkap unit kerja Anda" required></textarea>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="kabupaten_kota">Kabupaten/Kota Unit Kerja *</label>
+                        <input type="text" id="kabupaten_kota" name="kabupaten_kota" placeholder="Contoh: Pasuruan" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="provinsi">Provinsi Unit Kerja *</label>
+                        <input type="text" id="provinsi" name="provinsi" placeholder="Contoh: Jawa Timur" required>
+                    </div>
+                </div>
+
+                <!-- Data Pribadi -->
+                <div class="form-group">
+                    <label for="alamat_rumah">Alamat Rumah *</label>
+                    <textarea id="alamat_rumah" name="alamat_rumah" rows="3" placeholder="Alamat lengkap tempat tinggal Anda" required></textarea>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="email">Alamat Email *</label>
+                        <input type="email" id="email" name="email" placeholder="Contoh: nama@email.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="no_wa">No WhatsApp *</label>
+                        <input type="tel" id="no_wa" name="no_wa" placeholder="Contoh: 08123456789" required>
+                    </div>
+                </div>
+
+                <!-- Field Khusus Narasumber -->
+                <div id="narasumber-fields" style="display: none;">
+                    <div class="form-group">
+                        <label for="bidang_keahlian">Bidang Keahlian *</label>
+                        <input type="text" id="bidang_keahlian" name="bidang_keahlian" placeholder="Contoh: Pendidikan, Teknologi, dll">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="kualifikasi">Kualifikasi Akademik *</label>
+                        <select id="kualifikasi" name="kualifikasi">
+                            <option value="">-- Pilih Kualifikasi --</option>
+                            <option value="S1">S1</option>
+                            <option value="S2">S2</option>
+                            <option value="S3">S3</option>
+                            <option value="Profesor">Profesor</option>
+                            <option value="Lainnya">Lainnya</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="pengalaman">Pengalaman sebagai Narasumber</label>
+                        <textarea id="pengalaman" name="pengalaman" rows="3" placeholder="Jelaskan pengalaman Anda sebagai narasumber (jika ada)"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="topik_presentasi">Topik Presentasi yang Akan Disampaikan</label>
+                        <textarea id="topik_presentasi" name="topik_presentasi" rows="3" placeholder="Jelaskan topik yang akan Anda presentasikan"></textarea>
+                    </div>
+                </div>
+
+                <!-- Field Khusus Petugas -->
+                <div id="petugas-fields" style="display: none;">
+                    <!-- Field khusus petugas telah dihapus sesuai permintaan -->
+                </div>
+
+                <!-- Tombol Submit -->
+                <button type="submit" class="btn">KIRIM BIODATA</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function toggleFields() {
+            const tipePengguna = document.getElementById('tipe_pengguna').value;
+            const narasumberFields = document.getElementById('narasumber-fields');
+            const petugasFields = document.getElementById('petugas-fields');
+            
+            // Sembunyikan semua field khusus
+            narasumberFields.style.display = 'none';
+            petugasFields.style.display = 'none';
+            
+            // Tampilkan field sesuai pilihan
+            if (tipePengguna === 'narasumber') {
+                narasumberFields.style.display = 'block';
+                // Set required untuk field narasumber
+                document.getElementById('bidang_keahlian').required = true;
+                document.getElementById('kualifikasi').required = true;
+                // Hapus required untuk field petugas
+                document.getElementById('tugas_khusus').required = false;
+                document.getElementById('shift_kerja').required = false;
+                         } else if (tipePengguna === 'petugas') {
+                 petugasFields.style.display = 'block';
+                 // Hapus required untuk field narasumber
+                 document.getElementById('bidang_keahlian').required = false;
+                 document.getElementById('kualifikasi').required = false;
+             }
+        }
+
+        // Validasi form sebelum submit
+        document.querySelector('form').addEventListener('submit', function(e) {
+            const tipePengguna = document.getElementById('tipe_pengguna').value;
+            
+            if (!tipePengguna) {
+                e.preventDefault();
+                alert('Silakan pilih tipe pengguna terlebih dahulu!');
+                return;
+            }
+            
+            // Validasi tambahan bisa ditambahkan di sini
+        });
+    </script>
+
+</body>
+</html>

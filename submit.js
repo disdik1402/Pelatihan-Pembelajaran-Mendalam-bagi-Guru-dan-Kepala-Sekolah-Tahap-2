@@ -28,6 +28,10 @@ function detectFormType(form) {
   if (form.querySelector('#nama_peserta') && form.querySelector('#status') && form.querySelector('#tanggal')) {
     return 'absence';
   }
+  // Petugas/Narasumber form contains tipe_pengguna field
+  if (form.querySelector('#tipe_pengguna')) {
+    return 'petugas_narasumber';
+  }
   return 'biodata';
 }
 
@@ -62,7 +66,16 @@ document.addEventListener('DOMContentLoaded', () => {
       const type = detectFormType(form);
       const data = serializeForm(form);
       if (type === 'absence') data.formType = 'absence';
-      const endpoint = type === 'absence' ? ENDPOINT_ABSENCE : ENDPOINT_BIODATA;
+      if (type === 'petugas_narasumber') data.formType = 'petugas_narasumber';
+      
+      let endpoint;
+      if (type === 'absence') {
+        endpoint = ENDPOINT_ABSENCE;
+      } else if (type === 'petugas_narasumber') {
+        endpoint = ENDPOINT_BIODATA; // Gunakan endpoint yang sama untuk sementara
+      } else {
+        endpoint = ENDPOINT_BIODATA;
+      }
 
       const submitBtn = form.querySelector('button[type="submit"], input[type="submit"]');
       if (submitBtn) {

@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ruang Galeri Kelas - Pelatihan Pembelajaran Mendalam</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;700&display=swap" rel="stylesheet">
+    <script defer src="config.js"></script>
+    <script defer src="sheets.js"></script>
+</head>
+<body>
+
+    <div class="main-container">
+        <!-- Tombol Kembali ke Halaman Utama -->
+        <a href="index.html" class="back-link">← Kembali ke Halaman Utama</a>
+        
+        <header class="header-section">
+            <h1>🎓 Ruang Galeri Kelas</h1>
+            <p>Jelajahi aktivitas dan konten dari setiap kelas pelatihan</p>
+        </header>
+
+        <!-- Filter dan Pencarian -->
+        <div class="gallery-controls">
+            <div class="search-box">
+                <input type="text" id="search-kelas" placeholder="Cari kelas atau lokasi...">
+                <button type="button" onclick="searchKelas()">🔍</button>
+            </div>
+            
+            <div class="filter-controls">
+                <select id="filter-jenjang" onchange="filterKelas()">
+                    <option value="">Semua Jenjang</option>
+                    <option value="SD">SD</option>
+                    <option value="SMP">SMP</option>
+                    <option value="SMA">SMA</option>
+                    <option value="SMK">SMK</option>
+                </select>
+                
+                <select id="filter-kabupaten" onchange="filterKelas()">
+                    <option value="">Semua Kabupaten</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Galeri Kelas -->
+        <div class="gallery-grid" id="kelas-gallery">
+            <!-- Data kelas akan dimuat secara otomatis -->
+        </div>
+
+        <!-- Modal untuk Detail Kelas -->
+        <div id="kelas-modal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <div id="modal-content">
+                    <!-- Konten modal akan diisi secara dinamis -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let allClasses = [];
+        let filteredClasses = [];
+
+        // Fungsi untuk memuat data kelas
+        async function loadKelasData() {
+            try {
+                allClasses = await SheetsAPI.getClasses();
+                filteredClasses = [...allClasses];
+                
+                // Populate filter kabupaten
+                const kabupatenSet = new Set(allClasses.map(k => k.kabupaten).filter(Boolean));
+                const filterKabupaten = document.getElementById('filter-kabupaten');
+                kabupatenSet.forEach(kab => {
+                    const option = document.createElement('option');
+                    option.value = kab;
+                    option.textContent = kab;
+                    filterKabupaten.appendChild(option);
+                });
+                
+                displayKelas();
+            } catch (error) {
+                console.error('Error loading kelas data:', error);
+                document.getElementById('kelas-gallery').innerHTML = `
+                    <div class="error-message">
+                        <p>Gagal memuat data kelas. Silakan refresh halaman.</p>
+                    </div>
+                `;
+            }
+        }
+
+        // Fungsi untuk menampilkan kelas
+        function displayKelas() {
+            const galleryContainer = document.getElementById('kelas-gallery');
+            
+            if (filteredClasses.length === 0) {
+                galleryContainer.innerHTML = `
+                    <div class="no-data">
+                        <p>Tidak ada kelas yang sesuai dengan filter</p>
+                    </div>
+                `;
+                return;
+            }
+
+            const galleryHTML = filteredClasses.map(kelas => `
+                <div class="gallery-item kelas-card" onclick="showKelasDetail('${kelas.namaKelas}')">
+                    <div class="kelas-header">
+                        <h3>${kelas.namaKelas}</h3>
+                        <span class="kelas-status">${kelas.tahap}</span>
+                    </div>
+                    <div class="kelas-info">
+                        <p><strong>📍 Lokasi:</strong> ${kelas.lokus}</p>
+                        <p><strong>🏢 Kecamatan:</strong> ${kelas.kecamatan}</p>
+                        <p><strong>🌍 Kabupaten:</strong> ${kelas.kabupaten}</p>
+                        <p><strong>🎯 Jenjang:</strong> ${kelas.jenjang}</p>
+                        <p><strong>👥 Peserta:</strong> ${kelas.jumlahPeserta} orang</p>
+                    </div>
+                    <div class="kelas-actions">
+                        <button class="btn-small" onclick="event.stopPropagation(); showKelasDetail('${kelas.namaKelas}')">
+                            📖 Lihat Detail
+                        </button>
+                        <a href="upload-konten.html?kelas=${encodeURIComponent(kelas.namaKelas)}" class="btn-small btn-upload" onclick="event.stopPropagation();">
+                            📤 Upload Konten
+                        </a>
+                    </div>
+                </div>
+            `).join('');
+
+            galleryContainer.innerHTML = galleryHTML;
+        }
+
+        // Fungsi pencarian
+        function searchKelas() {
+            const searchTerm = document.getElementById('search-kelas').value.toLowerCase();
+            filteredClasses = allClasses.filter(kelas => 
+                kelas.namaKelas.toLowerCase().includes(searchTerm) ||
+                kelas.lokus.toLowerCase().includes(searchTerm) ||
+                kelas.kecamatan.toLowerCase().includes(searchTerm) ||
+                kelas.kabupaten.toLowerCase().includes(searchTerm)
+            );
+            displayKelas();
+        }
+
+        // Fungsi filter
+        function filterKelas() {
+            const jenjangFilter = document.getElementById('filter-jenjang').value;
+            const kabupatenFilter = document.getElementById('filter-kabupaten').value;
+            
+            filteredClasses = allClasses.filter(kelas => {
+                const jenjangMatch = !jenjangFilter || kelas.jenjang === jenjangFilter;
+                const kabupatenMatch = !kabupatenFilter || kelas.kabupaten === kabupatenFilter;
+                return jenjangMatch && kabupatenMatch;
+            });
+            
+            displayKelas();
+        }
+
+        // Fungsi untuk menampilkan detail kelas
+        function showKelasDetail(namaKelas) {
+            const kelas = allClasses.find(k => k.namaKelas === namaKelas);
+            if (!kelas) return;
+
+            const modal = document.getElementById('kelas-modal');
+            const modalContent = document.getElementById('modal-content');
+            
+            modalContent.innerHTML = `
+                <div class="kelas-detail">
+                    <h2>${kelas.namaKelas}</h2>
+                    <div class="detail-grid">
+                        <div class="detail-item">
+                            <strong>📅 Tahap:</strong> ${kelas.tahap}
+                        </div>
+                        <div class="detail-item">
+                            <strong>📍 Lokasi:</strong> ${kelas.lokus}
+                        </div>
+                        <div class="detail-item">
+                            <strong>🏢 Kecamatan:</strong> ${kelas.kecamatan}
+                        </div>
+                        <div class="detail-item">
+                            <strong>🌍 Kabupaten:</strong> ${kelas.kabupaten}
+                        </div>
+                        <div class="detail-item">
+                            <strong>🎯 Jenjang:</strong> ${kelas.jenjang}
+                        </div>
+                        <div class="detail-item">
+                            <strong>👥 Jumlah Peserta:</strong> ${kelas.jumlahPeserta} orang
+                        </div>
+                    </div>
+                    
+                    <div class="detail-actions">
+                        <a href="upload-konten.html?kelas=${encodeURIComponent(kelas.namaKelas)}" class="btn">
+                            📤 Upload Konten untuk Kelas Ini
+                        </a>
+                        <a href="peserta-kelas.html?kelas=${encodeURIComponent(kelas.namaKelas)}" class="btn">
+                            👥 Lihat Daftar Peserta
+                        </a>
+                    </div>
+                </div>
+            `;
+            
+            modal.style.display = 'block';
+        }
+
+        // Event listeners
+        document.addEventListener('DOMContentLoaded', loadKelasData);
+        
+        // Modal close functionality
+        document.querySelector('.close').onclick = function() {
+            document.getElementById('kelas-modal').style.display = 'none';
+        }
+        
+        window.onclick = function(event) {
+            const modal = document.getElementById('kelas-modal');
+            if (event.target == modal) {
+                modal.style.display = 'none';
+            }
+        }
+
+        // Search on Enter key
+        document.getElementById('search-kelas').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                searchKelas();
+            }
+        });
+    </script>
+
+</body>
+</html>

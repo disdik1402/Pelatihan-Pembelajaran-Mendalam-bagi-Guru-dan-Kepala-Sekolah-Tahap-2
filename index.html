@@ -8,6 +8,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;700&display=swap" rel="stylesheet">
+    <script defer src="config.js"></script>
     <script defer src="sheets.js"></script>
 </head>
 <body>
@@ -15,19 +16,81 @@
     <div class="main-container">
         <header class="header-section">
             <h1>Pelatihan Pembelajaran Mendalam bagi Guru dan Kepala Sekolah Tahap 2</h1>
-            <p>Selamat datang! Silakan pilih aksi di bawah ini atau jelajahi galeri.</p>
+            <p>Selamat datang! Silakan pilih aksi di bawah ini atau jelajahi galeri kelas.</p>
         </header>
 
         <div class="action-buttons">
-            <a href="biodata.html" class="btn">Isi Formulir Biodata</a>
-            <a href="kelas.html" class="btn">Daftar Kelas (Live)</a>
+            <a href="biodata.html" class="btn">📝 Biodata</a>
+            <a href="login-simple.html" class="btn">🔐 Login Petugas/Admin</a>
+            <a href="galeri-kelas.html" class="btn">Ruang Galeri</a>
             <a href="peserta-tidak-hadir.html" class="btn">Peserta yang Tidak Hadir</a>
-            <a href="login.html" class="btn">Login Panitia</a>
         </div>
 
-        <!-- Tambahan galeri atau informasi lainnya bisa ditambahkan di sini -->
-        
+        <!-- Galeri Kelas di Halaman Utama -->
+        <div class="gallery-section">
+            <h2>🎓 Galeri Kelas Pelatihan</h2>
+            <p>Lihat aktivitas dan konten dari setiap kelas pelatihan</p>
+            
+            <div class="gallery-grid" id="kelas-gallery">
+                <!-- Data kelas akan dimuat secara otomatis dari Google Sheets -->
+                <div class="loading-placeholder">
+                    <div class="loading-spinner"></div>
+                    <p>Memuat data kelas...</p>
+                </div>
+            </div>
+        </div>
     </div>
+
+    <script>
+        // Fungsi untuk memuat dan menampilkan galeri kelas
+        async function loadKelasGallery() {
+            try {
+                const classes = await SheetsAPI.getClasses();
+                const galleryContainer = document.getElementById('kelas-gallery');
+                
+                if (classes.length === 0) {
+                    galleryContainer.innerHTML = `
+                        <div class="no-data">
+                            <p>Belum ada data kelas yang tersedia</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                const galleryHTML = classes.map(kelas => `
+                    <div class="gallery-item kelas-card">
+                        <div class="kelas-header">
+                            <h3>${kelas.namaKelas}</h3>
+                            <span class="kelas-status">${kelas.tahap}</span>
+                        </div>
+                        <div class="kelas-info">
+                            <p><strong>Lokasi:</strong> ${kelas.lokus}</p>
+                            <p><strong>Kecamatan:</strong> ${kelas.kecamatan}</p>
+                            <p><strong>Kabupaten:</strong> ${kelas.kabupaten}</p>
+                            <p><strong>Jenjang:</strong> ${kelas.jenjang}</p>
+                            <p><strong>Peserta:</strong> ${kelas.jumlahPeserta} orang</p>
+                        </div>
+                        <div class="kelas-actions">
+                            <a href="galeri-kelas.html?kelas=${encodeURIComponent(kelas.namaKelas)}" class="btn-small">Lihat Galeri</a>
+                            <a href="upload-konten.html?kelas=${encodeURIComponent(kelas.namaKelas)}" class="btn-small btn-upload">Upload Konten</a>
+                        </div>
+                    </div>
+                `).join('');
+
+                galleryContainer.innerHTML = galleryHTML;
+            } catch (error) {
+                console.error('Error loading kelas gallery:', error);
+                document.getElementById('kelas-gallery').innerHTML = `
+                    <div class="error-message">
+                        <p>Gagal memuat data kelas. Silakan refresh halaman.</p>
+                    </div>
+                `;
+            }
+        }
+
+        // Load galeri saat halaman siap
+        document.addEventListener('DOMContentLoaded', loadKelasGallery);
+    </script>
 
 </body>
 </html>

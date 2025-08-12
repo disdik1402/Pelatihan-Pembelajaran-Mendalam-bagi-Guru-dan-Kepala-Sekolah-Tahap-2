@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Panitia - Pelatihan Pembelajaran Mendalam</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        .dashboard-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .dashboard-header {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .user-avatar {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: white;
+        }
+        
+        .user-details h2 {
+            margin: 0;
+            color: #fff;
+            font-size: 1.5rem;
+        }
+        
+        .user-details p {
+            margin: 5px 0 0 0;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.9rem;
+        }
+        
+        .logout-btn {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .logout-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 107, 107, 0.4);
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .stat-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+        
+        .stat-icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            display: block;
+        }
+        
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 10px;
+        }
+        
+        .stat-label {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 1rem;
+        }
+        
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+        
+        .menu-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            text-decoration: none;
+            color: inherit;
+        }
+        
+        .menu-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            background: rgba(255, 255, 255, 0.15);
+        }
+        
+        .menu-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            display: block;
+        }
+        
+        .menu-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #fff;
+            margin-bottom: 15px;
+        }
+        
+        .menu-description {
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+        
+        .menu-features {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            text-align: left;
+        }
+        
+        .menu-features li {
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 8px;
+            padding-left: 20px;
+            position: relative;
+        }
+        
+        .menu-features li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #4CAF50;
+            font-weight: bold;
+        }
+        
+        .session-info {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            text-align: center;
+        }
+        
+        .session-timer {
+            font-size: 1.2rem;
+            color: #fff;
+            margin-bottom: 15px;
+        }
+        
+        .session-actions {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .btn-session {
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-session:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(76, 175, 80, 0.4);
+        }
+        
+        .btn-refresh {
+            background: linear-gradient(135deg, #2196F3, #1976D2);
+        }
+        
+        .btn-refresh:hover {
+            box-shadow: 0 5px 15px rgba(33, 150, 243, 0.4);
+        }
+        
+        .btn-extend {
+            background: linear-gradient(135deg, #FF9800, #F57C00);
+        }
+        
+        .btn-extend:hover {
+            box-shadow: 0 5px 15px rgba(255, 152, 0, 0.4);
+        }
+        
+        .recent-activities {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .activities-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .activities-title {
+            font-size: 1.5rem;
+            color: #fff;
+            margin: 0;
+        }
+        
+        .activity-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            margin-bottom: 15px;
+            transition: all 0.3s ease;
+        }
+        
+        .activity-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        .activity-icon {
+            font-size: 1.5rem;
+            width: 40px;
+            text-align: center;
+        }
+        
+        .activity-content {
+            flex: 1;
+        }
+        
+        .activity-message {
+            color: #fff;
+            margin: 0 0 5px 0;
+            font-weight: 500;
+        }
+        
+        .activity-time {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+            margin: 0;
+        }
+        
+        @media (max-width: 768px) {
+            .dashboard-header {
+                flex-direction: column;
+                gap: 20px;
+                text-align: center;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .menu-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .session-actions {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="main-container">
+        <div class="dashboard-container">
+            
+            <!-- Header Dashboard -->
+            <div class="dashboard-header">
+                <div class="user-info">
+                    <div class="user-avatar">
+                        👤
+                    </div>
+                    <div class="user-details">
+                        <h2>Selamat Datang, Petugas/Admin!</h2>
+                        <p>Dashboard Pelatihan Pembelajaran Mendalam Tahap 2</p>
+                        <p id="user-password">Password: <span id="password-display"></span></p>
+                    </div>
+                </div>
+                <button class="logout-btn" onclick="logout()">
+                    🚪 Logout
+                </button>
+            </div>
+
+            <!-- Statistik Cepat -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <span class="stat-icon">👥</span>
+                    <div class="stat-number" id="total-peserta">0</div>
+                    <div class="stat-label">Total Peserta</div>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-icon">🏫</span>
+                    <div class="stat-number" id="total-kelas">0</div>
+                    <div class="stat-label">Total Kelas</div>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-icon">✅</span>
+                    <div class="stat-number" id="kehadiran">0%</div>
+                    <div class="stat-label">Rata-rata Kehadiran</div>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-icon">📁</span>
+                    <div class="stat-number" id="konten-upload">0</div>
+                    <div class="stat-label">Konten Upload</div>
+                </div>
+            </div>
+
+            <!-- Menu Utama -->
+            <div class="menu-grid">
+                <a href="upload-konten.html" class="menu-card">
+                    <span class="menu-icon">📤</span>
+                    <h3 class="menu-title">Upload Konten</h3>
+                    <p class="menu-description">Upload materi, dokumen, dan konten pembelajaran untuk kelas</p>
+                    <ul class="menu-features">
+                        <li>Upload file berbagai format</li>
+                        <li>Kategorisasi materi</li>
+                        <li>Preview file sebelum upload</li>
+                        <li>Validasi ukuran file</li>
+                    </ul>
+                </a>
+
+                <a href="galeri-kelas.html" class="menu-card">
+                    <span class="menu-icon">🏫</span>
+                    <h3 class="menu-title">Galeri Kelas</h3>
+                    <p class="menu-description">Lihat dan kelola semua kelas dan konten yang tersedia</p>
+                    <ul class="menu-features">
+                        <li>Daftar semua kelas</li>
+                        <li>Filter berdasarkan jenjang</li>
+                        <li>Pencarian kelas</li>
+                        <li>Detail informasi kelas</li>
+                    </ul>
+                </a>
+
+                <a href="biodata.html" class="menu-card">
+                    <span class="menu-icon">📝</span>
+                    <h3 class="menu-title">Kelola Biodata</h3>
+                    <p class="menu-description">Kelola data peserta, petugas, dan narasumber</p>
+                    <ul class="menu-features">
+                        <li>Form biodata peserta</li>
+                        <li>Form petugas & narasumber</li>
+                        <li>Validasi data otomatis</li>
+                        <li>Export data</li>
+                    </ul>
+                </a>
+
+                <a href="peserta-tidak-hadir.html" class="menu-card">
+                    <span class="menu-icon">❌</span>
+                    <h3 class="menu-title">Absensi Peserta</h3>
+                    <p class="menu-description">Kelola kehadiran dan absensi peserta pelatihan</p>
+                    <ul class="menu-features">
+                        <li>Input absensi harian</li>
+                        <li>Laporan kehadiran</li>
+                        <li>Statistik kehadiran</li>
+                        <li>Export laporan</li>
+                    </ul>
+                </a>
+
+                <a href="index.html" class="menu-card">
+                    <span class="menu-icon">🏠</span>
+                    <h3 class="menu-title">Halaman Utama</h3>
+                    <p class="menu-description">Kembali ke halaman utama website</p>
+                    <ul class="menu-features">
+                        <li>Overview pelatihan</li>
+                        <li>Informasi umum</li>
+                        <li>Navigasi utama</li>
+                        <li>Background animasi</li>
+                    </ul>
+                </a>
+
+                <a href="debug-password-simple.html" class="menu-card">
+                    <span class="menu-icon">🔧</span>
+                    <h3 class="menu-title">Debug & Test</h3>
+                    <p class="menu-description">Testing dan troubleshooting sistem</p>
+                    <ul class="menu-features">
+                        <li>Test password</li>
+                        <li>Debug login</li>
+                        <li>Verifikasi sistem</li>
+                        <li>Monitoring</li>
+                    </ul>
+                </a>
+            </div>
+
+            <!-- Informasi Session -->
+            <div class="session-info">
+                <div class="session-timer">
+                    ⏰ Session akan berakhir dalam: <span id="session-countdown">30:00</span>
+                </div>
+                <div class="session-actions">
+                    <button class="btn-session btn-refresh" onclick="refreshSession()">
+                        🔄 Refresh Session
+                    </button>
+                    <button class="btn-session btn-extend" onclick="extendSession()">
+                        ⏰ Perpanjang Session
+                    </button>
+                </div>
+            </div>
+
+            <!-- Aktivitas Terbaru -->
+            <div class="recent-activities">
+                <div class="activities-header">
+                    <h3 class="activities-title">📊 Aktivitas Terbaru</h3>
+                </div>
+                <div id="activities-list">
+                    <div class="activity-item">
+                        <span class="activity-icon">🔐</span>
+                        <div class="activity-content">
+                            <p class="activity-message">Login berhasil ke sistem panitia</p>
+                            <p class="activity-time">Baru saja</p>
+                        </div>
+                    </div>
+                    <div class="activity-item">
+                        <span class="activity-icon">📱</span>
+                        <div class="activity-content">
+                            <p class="activity-message">Dashboard panitia dibuka</p>
+                            <p class="activity-time">Baru saja</p>
+                        </div>
+                    </div>
+                    <div class="activity-item">
+                        <span class="activity-icon">⚙️</span>
+                        <div class="activity-content">
+                            <p class="activity-message">Sistem login sederhana aktif</p>
+                            <p class="activity-time">Baru saja</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Modal Session Expired -->
+    <div id="session-modal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <h2>⚠️ Session Berakhir</h2>
+            <p>Session Anda telah berakhir. Silakan login kembali untuk melanjutkan.</p>
+            <button onclick="redirectToLogin()" class="btn">🔐 Login Kembali</button>
+        </div>
+    </div>
+
+    <script>
+        let sessionTimer;
+        let sessionDuration = 30 * 60; // 30 menit dalam detik
+        let currentSessionTime = sessionDuration;
+
+        // Check authentication saat halaman dimuat
+        document.addEventListener('DOMContentLoaded', function() {
+            checkAuthentication();
+            loadDashboardData();
+            startSessionTimer();
+            displayUserPassword();
+        });
+
+        // Check apakah user sudah login
+        function checkAuthentication() {
+            const isLoggedIn = sessionStorage.getItem('panitia_logged_in');
+            const loginTime = sessionStorage.getItem('panitia_login_time');
+            
+            if (!isLoggedIn || !loginTime) {
+                redirectToLogin();
+                return;
+            }
+
+            // Check apakah session sudah expired
+            const now = Date.now();
+            const loginTimeNum = parseInt(loginTime);
+            const sessionAge = (now - loginTimeNum) / 1000; // dalam detik
+
+            if (sessionAge > sessionDuration) {
+                clearSession();
+                redirectToLogin();
+                return;
+            }
+
+            // Update session time yang tersisa
+            currentSessionTime = sessionDuration - sessionAge;
+        }
+
+        // Load data dashboard
+        function loadDashboardData() {
+            // Simulasi data (bisa diganti dengan data real dari Google Sheets)
+            document.getElementById('total-peserta').textContent = '150';
+            document.getElementById('total-kelas').textContent = '7';
+            document.getElementById('kehadiran').textContent = '85%';
+            document.getElementById('konten-upload').textContent = '23';
+        }
+
+        // Start session timer
+        function startSessionTimer() {
+            sessionTimer = setInterval(() => {
+                currentSessionTime--;
+                updateSessionDisplay();
+                
+                if (currentSessionTime <= 0) {
+                    clearSession();
+                    showSessionExpiredModal();
+                }
+            }, 1000);
+        }
+
+        // Update display session countdown
+        function updateSessionDisplay() {
+            const minutes = Math.floor(currentSessionTime / 60);
+            const seconds = currentSessionTime % 60;
+            const display = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            document.getElementById('session-countdown').textContent = display;
+        }
+
+        // Refresh session
+        function refreshSession() {
+            currentSessionTime = sessionDuration;
+            sessionStorage.setItem('panitia_login_time', Date.now().toString());
+            updateSessionDisplay();
+            
+            // Update activity
+            addActivity('🔄 Session diperpanjang', 'Baru saja');
+        }
+
+        // Extend session
+        function extendSession() {
+            currentSessionTime += 15 * 60; // Tambah 15 menit
+            sessionStorage.setItem('panitia_login_time', Date.now().toString());
+            updateSessionDisplay();
+            
+            // Update activity
+            addActivity('⏰ Session diperpanjang 15 menit', 'Baru saja');
+        }
+
+        // Clear session
+        function clearSession() {
+            sessionStorage.removeItem('panitia_logged_in');
+            sessionStorage.removeItem('panitia_password');
+            sessionStorage.removeItem('panitia_login_time');
+            clearInterval(sessionTimer);
+        }
+
+        // Logout
+        function logout() {
+            clearSession();
+            addActivity('🚪 Logout dari sistem', 'Baru saja');
+            redirectToLogin();
+        }
+
+        // Redirect ke login
+        function redirectToLogin() {
+            window.location.href = 'login-simple.html';
+        }
+
+        // Show session expired modal
+        function showSessionExpiredModal() {
+            document.getElementById('session-modal').style.display = 'flex';
+        }
+
+        // Add activity
+        function addActivity(message, time) {
+            const activitiesList = document.getElementById('activities-list');
+            const activityItem = document.createElement('div');
+            activityItem.className = 'activity-item';
+            activityItem.innerHTML = `
+                <span class="activity-icon">📝</span>
+                <div class="activity-content">
+                    <p class="activity-message">${message}</p>
+                    <p class="activity-time">${time}</p>
+                </div>
+            `;
+            
+            activitiesList.insertBefore(activityItem, activitiesList.firstChild);
+            
+            // Hapus activity lama jika terlalu banyak
+            if (activitiesList.children.length > 5) {
+                activitiesList.removeChild(activitiesList.lastChild);
+            }
+        }
+
+        // Display user password
+        function displayUserPassword() {
+            const password = sessionStorage.getItem('panitia_password');
+            if (password) {
+                document.getElementById('password-display').textContent = password;
+            }
+        }
+
+        // Prevent page refresh/close without confirmation
+        window.addEventListener('beforeunload', function(e) {
+            if (sessionStorage.getItem('panitia_logged_in')) {
+                e.preventDefault();
+                e.returnValue = 'Anda akan keluar dari sistem. Yakin ingin meninggalkan halaman ini?';
+            }
+        });
+
+        // Auto-refresh session jika user aktif
+        let userActivityTimer;
+        function resetUserActivityTimer() {
+            clearTimeout(userActivityTimer);
+            userActivityTimer = setTimeout(() => {
+                // User tidak aktif selama 5 menit, refresh session
+                if (currentSessionTime > 5 * 60) {
+                    refreshSession();
+                }
+            }, 5 * 60 * 1000); // 5 menit
+        }
+
+        // Reset timer saat ada aktivitas user
+        ['mousedown', 'mousemove', 'keypress', 'scroll', 'touchstart'].forEach(event => {
+            document.addEventListener(event, resetUserActivityTimer, true);
+        });
+
+        // Initialize user activity timer
+        resetUserActivityTimer();
+    </script>
+
+</body>
+</html>
